@@ -1,4 +1,4 @@
-# Next + Netlify Starter
+# Typing Game!
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/982388ca-659f-4544-92f3-537521c0cfc8/deploy-status)](https://app.netlify.com/sites/typing-game-stream/deploys)
 
@@ -23,6 +23,7 @@ You can start editing the page by modifying `pages/index.js`. The page auto-upda
 ### Installation options
 
 **Option one:** One-click deploy
+
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/cassidoo/typing-game)
 
 **Option two:** Manual clone
