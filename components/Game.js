@@ -1,6 +1,6 @@
 import { useReducer, useEffect } from "react";
 import Header from "@components/Header";
-import pokemon from "@components/pokemon";
+import pokemonArray from "@components/pokemon";
 
 export default function Game() {
   let initialState = {
@@ -21,8 +21,18 @@ export default function Game() {
       case "RESTART_GAME": {
         return { ...state, gameState: "STARTED", score: 0 };
       }
-      case "SET_POKEMON": {
+      case "TYPE_POKEMON": {
         return { ...state, currentPokemon: action.pokemon };
+      }
+      case "SUBMIT_POKEMON": {
+        let newScore = state.score;
+        if (pokemonArray.includes(action.pokemon)) {
+          newScore += 1;
+        } else {
+          newScore -= 1;
+        }
+
+        return { ...state, currentPokemon: "", score: newScore };
       }
       default: {
         throw new Error("Unrecognized state");
@@ -34,7 +44,7 @@ export default function Game() {
 
   return (
     <>
-      <Header text="get typin loser" />
+      <Header text="get typin', loser" />
       {gameState === "NOT_STARTED" && (
         <button
           onClick={() => {
@@ -51,9 +61,12 @@ export default function Game() {
             placeholder="Name Pokemon"
             value={currentPokemon}
             onChange={(e) => {
-              if (event.key === " ") {
+              dispatch({ type: "TYPE_POKEMON", pokemon: e.target.value });
+            }}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
                 dispatch({
-                  type: "SET_POKEMON",
+                  type: "SUBMIT_POKEMON",
                   pokemon: e.target.value.trim(),
                 });
               }
@@ -80,6 +93,12 @@ export default function Game() {
           </button>
         </>
       )}
+      <style jsx>{`
+        input {
+          height: 30px;
+          font-size: 24px;
+        }
+      `}</style>
     </>
   );
 }
