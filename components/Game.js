@@ -1,8 +1,9 @@
 import { useReducer, useEffect } from "react";
 import Header from "@components/Header";
+import PokemonBanner from "@components/PokemonBanner";
 import pokemonArray from "@components/pokemon";
 
-export default function Game() {
+function useGameReducer() {
   let initialState = {
     gameState: "NOT_STARTED",
     // not started, in progress, finished
@@ -40,6 +41,11 @@ export default function Game() {
     }
   }, initialState);
 
+  return [state, dispatch];
+}
+
+export default function Game() {
+  let [state, dispatch] = useGameReducer();
   let { gameState, score, currentPokemon } = state;
 
   return (
@@ -56,6 +62,7 @@ export default function Game() {
       )}
       {gameState === "STARTED" && (
         <>
+          <PokemonBanner />
           <input
             type="text"
             placeholder="Name Pokemon"
@@ -77,7 +84,7 @@ export default function Game() {
               dispatch({ type: "END_GAME" });
             }}
           >
-            Give up
+            I'm done
           </button>
         </>
       )}
