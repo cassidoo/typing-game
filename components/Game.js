@@ -3,12 +3,33 @@ import Header from "@components/Header";
 import PokemonBanner from "@components/PokemonBanner";
 import pokemonArray from "@components/pokemon";
 
+function usePokeApi(mostRecentlySubmitted, dispatch) {
+  useEffect(() => {
+    let current = true;
+    fetch(`https://pokeapi.co/api/v2/pokemon/${mostRecentlySubmitted}/`)
+      .then((res) => res.json())
+      .then((res) => {
+        if (current) {
+          dispatch({ type: "OBTAINED_ID", id: res.id });
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+    return () => {
+      current = false;
+    };
+  }, [mostRecentlySubmitted]);
+}
+
 function useGameReducer() {
   let initialState = {
     gameState: "NOT_STARTED",
     // not started, in progress, finished
     score: 0,
     currentPokemon: "",
+    mostRecentlySubmitted: "",
+    guessedPokemon: [],
   };
 
   let [state, dispatch] = useReducer((state, action) => {
@@ -29,11 +50,27 @@ function useGameReducer() {
         let newScore = state.score;
         if (pokemonArray.includes(action.pokemon)) {
           newScore += 1;
+          return {
+            ...state,
+            currentPokemon: "",
+            mostRecentlySubmitted: action.pokemon,
+            score: newScore,
+          };
         } else {
           newScore -= 1;
+          return {
+            ...state,
+            currentPokemon: "",
+            mostRecentlySubmitted: null,
+            score: newScore,
+          };
         }
-
-        return { ...state, currentPokemon: "", score: newScore };
+      }
+      case "OBTAINED_ID": {
+        return {
+          ...state,
+          guessedPokemon: state.guessedPokemon.concat(action.id),
+        };
       }
       default: {
         throw new Error("Unrecognized state");
@@ -46,7 +83,15 @@ function useGameReducer() {
 
 export default function Game() {
   let [state, dispatch] = useGameReducer();
-  let { gameState, score, currentPokemon } = state;
+  let {
+    gameState,
+    score,
+    currentPokemon,
+    mostRecentlySubmitted,
+    guessedPokemon,
+  } = state;
+
+  usePokeApi(mostRecentlySubmitted, dispatch);
 
   return (
     <>
@@ -62,7 +107,7 @@ export default function Game() {
       )}
       {gameState === "STARTED" && (
         <>
-          <PokemonBanner />
+          <PokemonBanner pokeArr={guessedPokemon} />
           <input
             type="text"
             placeholder="Name Pokemon"

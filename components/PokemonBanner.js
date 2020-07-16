@@ -1,7 +1,16 @@
+import { useState, useEffect } from "react";
+
 export default function PokemonBanner({ pokeArr }) {
   return (
-    <div>
-      <PokemonSprite pokeNum={5} />
+    <div className="sprite-container">
+      {pokeArr.map((id) => {
+        return <PokemonSprite pokeNum={id} />;
+      })}
+      <style jsx>{`
+        .sprite-container {
+          max-width: 400px;
+        }
+      `}</style>
     </div>
   );
 }
@@ -15,6 +24,7 @@ function PokemonSprite({ pokeNum }) {
       <div className="sprite"></div>
       <style jsx>{`
         .sprite {
+          display: inline-block;
           width: 64px;
           height: 64px;
           background: url("/sprites.png") no-repeat -${col}px -${row}px;
