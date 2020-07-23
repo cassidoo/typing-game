@@ -38,7 +38,12 @@ function useGameReducer() {
         return { ...state, gameState: "STARTED" };
       }
       case "END_GAME": {
-        return { ...state, gameState: "FINISHED", currentPokemon: "" };
+        return {
+          ...state,
+          gameState: "FINISHED",
+          currentPokemon: "",
+          guessedPokemon: [],
+        };
       }
       case "RESTART_GAME": {
         return { ...state, gameState: "STARTED", score: 0 };
@@ -50,6 +55,7 @@ function useGameReducer() {
         let newScore = state.score;
         if (pokemonArray.includes(action.pokemon)) {
           newScore += 1;
+
           return {
             ...state,
             currentPokemon: "",
@@ -95,9 +101,11 @@ export default function Game() {
 
   return (
     <>
-      <Header text="get typin', loser" />
+      <Header text={`Pokémon Naming Game`} />
       {gameState === "NOT_STARTED" && (
         <button
+          type="button"
+          className="nes-btn is-warning"
           onClick={() => {
             dispatch({ type: "START_GAME" });
           }}
@@ -111,6 +119,7 @@ export default function Game() {
           <input
             type="text"
             placeholder="Name Pokemon"
+            className="nes-input"
             value={currentPokemon}
             onChange={(e) => {
               dispatch({ type: "TYPE_POKEMON", pokemon: e.target.value });
@@ -128,6 +137,8 @@ export default function Game() {
             onClick={() => {
               dispatch({ type: "END_GAME" });
             }}
+            type="button"
+            className="nes-btn is-error"
           >
             I'm done
           </button>
@@ -140,6 +151,8 @@ export default function Game() {
             onClick={() => {
               dispatch({ type: "RESTART_GAME" });
             }}
+            type="button"
+            className="nes-btn is-success"
           >
             Try again
           </button>
@@ -147,8 +160,7 @@ export default function Game() {
       )}
       <style jsx>{`
         input {
-          height: 30px;
-          font-size: 24px;
+          margin: 20px 0;
         }
       `}</style>
     </>

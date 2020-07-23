@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
-
 export default function PokemonBanner({ pokeArr }) {
   return (
     <div className="sprite-container">
       {pokeArr.map((id) => {
-        return <PokemonSprite pokeNum={id} />;
+        return <PokemonSprite pokeNum={id} key={id} />;
       })}
       <style jsx>{`
         .sprite-container {
@@ -17,7 +15,11 @@ export default function PokemonBanner({ pokeArr }) {
 
 function PokemonSprite({ pokeNum }) {
   let row = Math.floor(pokeNum / 16) * 64;
-  let col = ((pokeNum % 16) - 1) * 64;
+  let col = ((pokeNum - 1) % 16) * 64;
+
+  if (pokeNum % 16 === 0) {
+    row -= 64;
+  }
 
   return (
     <>
