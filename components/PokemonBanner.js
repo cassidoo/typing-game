@@ -14,10 +14,12 @@ export default function PokemonBanner({ pokeArr }) {
 }
 
 function PokemonSprite({ pokeNum }) {
-  const columns = 16;
-  const cellWidth = 64;
-  let row = Math.floor((pokeNum - 1) / columns) * cellWidth;
-  let col = ((pokeNum - 1) % columns) * cellWidth;
+  let row = Math.floor(pokeNum / 16) * 64;
+  let col = ((pokeNum - 1) % 16) * 64;
+
+  if (pokeNum % 16 === 0) {
+    row -= 64;
+  }
 
   return (
     <>
@@ -25,8 +27,8 @@ function PokemonSprite({ pokeNum }) {
       <style jsx>{`
         .sprite {
           display: inline-block;
-          width: ${cellWidth}px;
-          height: ${cellWidth}px;
+          width: 64px;
+          height: 64px;
           background: url("/sprites.png") no-repeat -${col}px -${row}px;
         }
       `}</style>
