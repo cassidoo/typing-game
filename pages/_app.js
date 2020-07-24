@@ -1,12 +1,10 @@
-import "nes.css/css/nes.min.css";
-
 function MyApp({ Component, pageProps }) {
   return (
     <>
       <Component {...pageProps} />
       <style jsx global>
         {`
-          @import "./node_modules/nes.css/css/nes.css";
+          @import "https://unpkg.com/nes.css@2.3.0/css/nes.min.css";
           @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
           html,
