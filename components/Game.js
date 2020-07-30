@@ -1,7 +1,11 @@
 import { useReducer, useEffect } from "react";
+
 import Header from "@components/Header";
 import PokemonBanner from "@components/PokemonBanner";
 import pokemonArray from "@components/pokemon";
+
+import useBattleSound from "@hooks/useBattleSound";
+import useSuccessSound from "@hooks/useSuccessSound";
 
 function usePokeApi(mostRecentlySubmitted, dispatch) {
   useEffect(() => {
@@ -32,21 +36,25 @@ function useGameReducer() {
     guessedPokemon: [],
   };
 
+  let [battleSound, stopBattleSound] = useBattleSound();
+  let [successSound, stopSuccessSound] = useSuccessSound();
+
   let [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
       case "START_GAME": {
-        return { ...state, gameState: "STARTED" };
+        stopSuccessSound();
+        battleSound();
+        return { ...state, gameState: "STARTED", score: 0 };
       }
       case "END_GAME": {
+        stopBattleSound();
+        successSound();
         return {
           ...state,
           gameState: "FINISHED",
           currentPokemon: "",
           guessedPokemon: [],
         };
-      }
-      case "RESTART_GAME": {
-        return { ...state, gameState: "STARTED", score: 0 };
       }
       case "TYPE_POKEMON": {
         return { ...state, currentPokemon: action.pokemon };
@@ -149,7 +157,7 @@ export default function Game() {
           <div>Score: {score}</div>
           <button
             onClick={() => {
-              dispatch({ type: "RESTART_GAME" });
+              dispatch({ type: "START_GAME" });
             }}
             type="button"
             className="nes-btn is-success"
