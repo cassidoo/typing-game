@@ -21,12 +21,12 @@ export default function useGameReducer() {
     switch (action.type) {
       case "START_GAME": {
         stopSuccessSound();
-        battleSound({ forceSoundEnabled: state.soundOn });
+        if (state.soundOn) battleSound();
         return { ...state, gameState: "STARTED", score: 0 };
       }
       case "END_GAME": {
         stopBattleSound();
-        successSound({ forceSoundEnabled: state.soundOn });
+        if (state.soundOn) successSound();
         return {
           ...state,
           gameState: "FINISHED",
@@ -65,9 +65,14 @@ export default function useGameReducer() {
         };
       }
       case "MUTE": {
+        // TODO: WHY ME
+        stopBattleSound();
+        stopSuccessSound();
         return { ...state, soundOn: false };
       }
       case "UNMUTE": {
+        // battleSound();
+        // successSound();
         return { ...state, soundOn: true };
       }
       default: {
