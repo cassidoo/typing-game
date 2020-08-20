@@ -12,7 +12,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <MuteButton />
+      {/* <MuteButton /> */}
       <main>
         <Game />
       </main>

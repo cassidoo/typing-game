@@ -12,12 +12,24 @@ export default function Game() {
     currentPokemon,
     mostRecentlySubmitted,
     guessedPokemon,
+    soundOn
   } = state;
+
+  let toggleSound = () => {
+    if (soundOn) {
+      dispatch({ type: "MUTE" });
+    } else {
+      dispatch({ type: "UNMUTE" });
+    }
+  };
 
   usePokeApi(mostRecentlySubmitted, dispatch);
 
   return (
     <>
+      <button className={`nes-btn button-mute`} onClick={toggleSound}>
+        {soundOn ? "Sound!" : "Silence!"}
+      </button>
       <Header text={`Pokémon Naming Game`} />
       {gameState === "NOT_STARTED" && (
         <button
@@ -78,6 +90,11 @@ export default function Game() {
       <style jsx>{`
         input {
           margin: 20px 0;
+        }
+        .button-mute {
+          position: absolute;
+          top: 20px;
+          right: 20px;
         }
       `}</style>
     </>

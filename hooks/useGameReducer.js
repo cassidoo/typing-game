@@ -71,7 +71,7 @@ export default function useGameReducer() {
         return { ...state, soundOn: false };
       }
       case "UNMUTE": {
-        // battleSound();
+        battleSound();
         // successSound();
         return { ...state, soundOn: true };
       }
