@@ -1,10 +1,4 @@
-import useGameReducer from "@hooks/useGameReducer";
-
-export default function MuteButton() {
-  let [state, dispatch] = useGameReducer();
-
-  let { soundOn } = state;
-
+export default function MuteButton({ soundOn, dispatch }) {
   let toggleSound = () => {
     if (soundOn) {
       dispatch({ type: "MUTE" });

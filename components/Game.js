@@ -1,5 +1,6 @@
 import Header from "@components/Header";
 import PokemonBanner from "@components/PokemonBanner";
+import MuteButton from "@components/MuteButton";
 
 import usePokeApi from "@hooks/usePokeApi";
 import useGameReducer from "@hooks/useGameReducer";
@@ -12,12 +13,14 @@ export default function Game() {
     currentPokemon,
     mostRecentlySubmitted,
     guessedPokemon,
+    soundOn,
   } = state;
 
   usePokeApi(mostRecentlySubmitted, dispatch);
 
   return (
     <>
+      <MuteButton soundOn={soundOn} dispatch={dispatch} />
       <Header text={`Pokémon Naming Game`} />
       {gameState === "NOT_STARTED" && (
         <button

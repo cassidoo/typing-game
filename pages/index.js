@@ -1,7 +1,6 @@
 import Head from "next/head";
 
 import Game from "@components/Game";
-import MuteButton from "@components/MuteButton";
 import Footer from "@components/Footer";
 
 export default function Home() {
@@ -12,7 +11,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <MuteButton />
       <main>
         <Game />
       </main>

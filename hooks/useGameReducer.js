@@ -1,4 +1,5 @@
 import { useReducer } from "react";
+
 import useBattleSound from "@hooks/useBattleSound";
 import useSuccessSound from "@hooks/useSuccessSound";
 import pokemonArray from "@components/pokemon";
@@ -71,8 +72,8 @@ export default function useGameReducer() {
         return { ...state, soundOn: false };
       }
       case "UNMUTE": {
-        // battleSound();
-        // successSound();
+        if (state.gameState === `STARTED`) battleSound();
+        if (state.gameState === `FINISHED`) successSound();
         return { ...state, soundOn: true };
       }
       default: {
