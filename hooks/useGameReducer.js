@@ -1,10 +1,16 @@
 import { useReducer } from "react";
 
+import usePokeCry from "@hooks/usePokeCry";
 import useBattleSound from "@hooks/useBattleSound";
 import useSuccessSound from "@hooks/useSuccessSound";
+
 import pokemonArray from "@components/pokemon";
 
+import { loadState, saveState } from "@utils/localStorage";
+
 export default function useGameReducer() {
+  let localState = loadState();
+
   let initialState = {
     gameState: "NOT_STARTED",
     // not started, in progress, finished
@@ -12,7 +18,8 @@ export default function useGameReducer() {
     currentPokemon: "",
     mostRecentlySubmitted: "",
     guessedPokemon: [],
-    soundOn: true,
+    soundOn: localState ? localState.soundOn : true,
+    scores: localState?.scores || [],
   };
 
   let [battleSound, stopBattleSound] = useBattleSound();
@@ -28,12 +35,27 @@ export default function useGameReducer() {
       case "END_GAME": {
         stopBattleSound();
         if (state.soundOn) successSound();
+
+        let newScores = state.scores.concat({
+          score: state.score,
+          date: new Date().toLocaleDateString(),
+        });
+
+        saveState({
+          ...localState,
+          scores: newScores,
+        });
         return {
           ...state,
           gameState: "FINISHED",
           currentPokemon: "",
           guessedPokemon: [],
+          scores: newScores,
         };
+      }
+      case "VIEW_HS_TABLE": {
+        stopSuccessSound();
+        return { ...state, gameState: "NOT_STARTED" };
       }
       case "TYPE_POKEMON": {
         return { ...state, currentPokemon: action.pokemon };
@@ -66,14 +88,15 @@ export default function useGameReducer() {
         };
       }
       case "MUTE": {
-        // TODO: WHY ME
         stopBattleSound();
         stopSuccessSound();
+        saveState({ ...localState, soundOn: false });
         return { ...state, soundOn: false };
       }
       case "UNMUTE": {
         if (state.gameState === `STARTED`) battleSound();
         if (state.gameState === `FINISHED`) successSound();
+        saveState({ ...localState, soundOn: true });
         return { ...state, soundOn: true };
       }
       default: {
