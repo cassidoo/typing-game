@@ -1,6 +1,7 @@
 import Header from "@components/Header";
 import PokemonBanner from "@components/PokemonBanner";
 import MuteButton from "@components/MuteButton";
+import HighScoreTable from "@components/HighScoreTable";
 
 import usePokeApi from "@hooks/usePokeApi";
 import useGameReducer from "@hooks/useGameReducer";
@@ -14,6 +15,7 @@ export default function Game() {
     mostRecentlySubmitted,
     guessedPokemon,
     soundOn,
+    scores,
   } = state;
 
   usePokeApi(mostRecentlySubmitted, dispatch);
@@ -23,15 +25,18 @@ export default function Game() {
       <MuteButton soundOn={soundOn} dispatch={dispatch} />
       <Header text={`Pokémon Naming Game`} />
       {gameState === "NOT_STARTED" && (
-        <button
-          type="button"
-          className="nes-btn is-warning"
-          onClick={() => {
-            dispatch({ type: "START_GAME" });
-          }}
-        >
-          Start Game
-        </button>
+        <>
+          <HighScoreTable scores={scores} />
+          <button
+            type="button"
+            className="nes-btn is-warning"
+            onClick={() => {
+              dispatch({ type: "START_GAME" });
+            }}
+          >
+            Start Game
+          </button>
+        </>
       )}
       {gameState === "STARTED" && (
         <>
@@ -66,7 +71,11 @@ export default function Game() {
       )}
       {gameState === "FINISHED" && (
         <>
-          <div>Score: {score}</div>
+          <div className="score-container">
+            <i className="nes-ash"></i>
+            <span className="nes-balloon from-left">{score} found of 151</span>
+          </div>
+
           <button
             onClick={() => {
               dispatch({ type: "START_GAME" });
@@ -76,11 +85,24 @@ export default function Game() {
           >
             Try again
           </button>
+          <button
+            onClick={() => {
+              dispatch({ type: "VIEW_HS_TABLE" });
+            }}
+            type="button"
+            className="nes-btn is-primary"
+          >
+            View High Scores
+          </button>
         </>
       )}
       <style jsx>{`
         input {
           margin: 20px 0;
+        }
+
+        .score-container {
+          display: flex;
         }
       `}</style>
     </>
